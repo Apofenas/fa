@@ -15,6 +15,8 @@ local DeathNukeWeapon = import('/lua/sim/defaultweapons.lua').DeathNukeWeapon
 local CDFHeavyMicrowaveLaserGeneratorCom = CWeapons.CDFHeavyMicrowaveLaserGeneratorCom
 local CDFOverchargeWeapon = CWeapons.CDFOverchargeWeapon
 local CANTorpedoLauncherWeapon = CWeapons.CANTorpedoLauncherWeapon
+local CDFMissileMesonWeapon = import('/lua/cybranweapons.lua').CDFMissileMesonWeapon
+local DummyWeapon = import('/lua/sim/defaultweapons.lua').DefaultProjectileWeapon
 local Entity = import('/lua/sim/Entity.lua').Entity
 
 URL0001 = Class(ACUUnit, CCommandUnit) {
@@ -41,6 +43,8 @@ URL0001 = Class(ACUUnit, CCommandUnit) {
 
         OverCharge = Class(CDFOverchargeWeapon) {},
         AutoOverCharge = Class(CDFOverchargeWeapon) {},
+        RocketBackpack = Class(CDFMissileMesonWeapon) {},
+        DummyWeapon = Class(DummyWeapon) {},
     },
 
     __init = function(self)
@@ -60,7 +64,7 @@ URL0001 = Class(ACUUnit, CCommandUnit) {
         self:AddBuildRestriction(categories.CYBRAN * (categories.BUILTBYTIER2COMMANDER + categories.BUILTBYTIER3COMMANDER))
         
         local wepBp = self:GetBlueprint().Weapon
-        self.normalRange = 22
+        self:UpdateNormalRange()
         self.torpRange = 60
         for k, v in wepBp do
             if v.Label == 'RightRipper' then
@@ -76,6 +80,7 @@ URL0001 = Class(ACUUnit, CCommandUnit) {
         self:SetWeaponEnabledByLabel('RightRipper', true)
         self:SetWeaponEnabledByLabel('MLG', false)
         self:SetWeaponEnabledByLabel('Torpedo', false)
+        self:SetWeaponEnabledByLabel('RocketBackpack', false)
         self:SetMaintenanceConsumptionInactive()
         -- Block enhancement-based Intel functions until enhancements are built
         self:DisableUnitIntel('Enhancement', 'RadarStealth')
@@ -98,6 +103,16 @@ URL0001 = Class(ACUUnit, CCommandUnit) {
     CreateBuildEffects = function(self, unitBeingBuilt, order)
         EffectUtil.SpawnBuildBots(self, unitBeingBuilt, self.BuildEffectsBag)
         EffectUtil.CreateCybranBuildBeams(self, unitBeingBuilt, self:GetBlueprint().General.BuildBones.BuildEffectBones, self.BuildEffectsBag)
+    end,
+	
+    UpdateNormalRange = function(self)
+        if self:HasEnhancement('NaniteTorpedoTube') or self:HasEnhancement('CoolingUpgrade') then
+            self.normalRange = 30
+            self:GetWeaponByLabel('DummyWeapon'):ChangeMaxRadius(self.normalRange)
+        else
+            self.normalRange = 22
+            self:GetWeaponByLabel('DummyWeapon'):ChangeMaxRadius(self.normalRange)
+        end
     end,
 
     CreateEnhancement = function(self, enh)
@@ -252,7 +267,6 @@ URL0001 = Class(ACUUnit, CCommandUnit) {
             local bp = self:GetBlueprint().Enhancements[enh]
             local wep = self:GetWeaponByLabel('RightRipper')
             wep:ChangeMaxRadius(bp.NewMaxRadius or 30)
-            self.normalRange = bp.NewMaxRadius or 30
             wep:ChangeRateOfFire(bp.NewRateOfFire or 2)
             local microwave = self:GetWeaponByLabel('MLG')
             microwave:ChangeMaxRadius(bp.NewMaxRadius or 30)
@@ -260,6 +274,7 @@ URL0001 = Class(ACUUnit, CCommandUnit) {
             oc:ChangeMaxRadius(bp.NewMaxRadius or 30)
             local aoc = self:GetWeaponByLabel('AutoOverCharge')
             aoc:ChangeMaxRadius(bp.NewMaxRadius or 30)
+            self:UpdateNormalRange()
             if not (self:GetCurrentLayer() == 'Seabed' and self:HasEnhancement('NaniteTorpedoTube')) then
                 self:GetWeaponByLabel('DummyWeapon'):ChangeMaxRadius(self.normalRange)
             end
@@ -270,11 +285,10 @@ URL0001 = Class(ACUUnit, CCommandUnit) {
                 if v.Label == 'RightRipper' then
                     wep:ChangeRateOfFire(v.RateOfFire or 1)
                     wep:ChangeMaxRadius(v.MaxRadius or 22)
-                    self.normalRange = v.MaxRadius or 22
                     self:GetWeaponByLabel('MLG'):ChangeMaxRadius(v.MaxRadius or 22)
                     self:GetWeaponByLabel('OverCharge'):ChangeMaxRadius(v.MaxRadius or 22)
                     self:GetWeaponByLabel('AutoOverCharge'):ChangeMaxRadius(v.MaxRadius or 22)
-                    self.normalRange = v.MaxRadius or 22
+                    self:UpdateNormalRange()
                     if not (self:GetCurrentLayer() == 'Seabed' and self:HasEnhancement('NaniteTorpedoTube')) then
                         self:GetWeaponByLabel('DummyWeapon'):ChangeMaxRadius(self.normalRange)
                     end
@@ -287,16 +301,20 @@ URL0001 = Class(ACUUnit, CCommandUnit) {
             self:SetWeaponEnabledByLabel('MLG', false)
         elseif enh == 'NaniteTorpedoTube' then
             self:SetWeaponEnabledByLabel('Torpedo', true)
+            self:SetWeaponEnabledByLabel('RocketBackpack', true)
             self:EnableUnitIntel('Enhancement', 'Sonar')
             if self:GetCurrentLayer() == 'Seabed' then
                 self:GetWeaponByLabel('DummyWeapon'):ChangeMaxRadius(self.torpRange)
             end
+            self:UpdateNormalRange()
         elseif enh == 'NaniteTorpedoTubeRemove' then
             self:SetWeaponEnabledByLabel('Torpedo', false)
+            self:SetWeaponEnabledByLabel('RocketBackpack', false)
             self:DisableUnitIntel('Enhancement', 'Sonar')
             if self:GetCurrentLayer() == 'Seabed' then
                 self:GetWeaponByLabel('DummyWeapon'):ChangeMaxRadius(self.normalRange)
             end
+            self:UpdateNormalRange()
         end
     end,
 
