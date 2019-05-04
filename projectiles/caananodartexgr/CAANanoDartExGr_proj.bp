@@ -19,7 +19,7 @@ ProjectileBlueprint {
     Categories = {
         'CYBRAN',
         'PROJECTILE',
-        'DIRECTFIRE',
+        'ANTIAIR',
     },
     Display = {
         Mesh = {
@@ -32,15 +32,15 @@ ProjectileBlueprint {
                 },
             },
         },
-        StrategicIconSize = 1,
+        StrategicIconSize = 2,
         UniformScale = 0.12,
     },
     General = {
-        Category = 'Direct Fire',
+        Category = 'Anti Air',
         EntityCategory = {
             'CYBRAN',
             'PROJECTILE',
-            'DIRECTFIRE',
+            'ANTIAIR',
         },
         Faction = 'Cybran',
         TechLevel = 1,
@@ -50,12 +50,18 @@ ProjectileBlueprint {
         HelpText = 0,
     },
     Physics = {
+        Acceleration = 10,
         DestroyOnWater = true,
-        InitialSpeed = 20,
+        InitialSpeed = 25,
         LeadTarget = true,
-        MaxSpeed = 20,
+        Lifetime = 4,
+        MaxSpeed = 25,
+        MaxZigZag = 2,
+        RotationalVelocityRange = 200,
         TrackTarget = false,
-        UseGravity = true,
+        TurnRate = 0,
+        UseGravity = false,
         VelocityAlign = true,
+        ZigZagFrequency = 0.2,
     },
 }
