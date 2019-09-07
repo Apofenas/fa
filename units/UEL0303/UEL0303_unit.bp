@@ -1,9 +1,3 @@
------------------------------------------------------------------------------
---    File        :    /Titan_Missiles/hook/units/UEL0303/UEL0303_unit.bp
---    Author(s)    :    Resin Smoker
---    Summary     :    UEF Siege Assault Bot Script (With Napalm Launcher Enhancement)
---    Copyright © 2015 Public release, All rights reserved.
------------------------------------------------------------------------------
 UnitBlueprint {
     Audio = {
         AmbientMove = Sound {
@@ -284,12 +278,10 @@ UnitBlueprint {
             FiringTolerance = 2,
             Label = 'HeavyPlasma01',
             LeadTarget = true,
-            MaxRadius = 20,
+            MaxRadius = 22,
             MuzzleSalvoDelay = 0,
             MuzzleSalvoSize = 1,
             MuzzleVelocity = 35,
-            NoPause = true,
-            NotExclusive = true,
             ProjectileId = '/projectiles/TDFPlasmaHeavy04/TDFPlasmaHeavy04_proj.bp',
             ProjectileLifetimeUsesMultiplier = 1.15,
             ProjectilesPerOnFire = 1,
@@ -353,13 +345,11 @@ UnitBlueprint {
                     LodCutoff = 'Weapon_LodCutoff',
                 },
             },
-            BallisticArc = 'RULEUBA_None',
+            BallisticArc = 'RULEUBA_HighArc',
             CollideFriendly = false,
-            Damage = 10,
+            Damage = 50,
             DamageFriendly = true,
             DamageRadius = 3,
-            DoTPulses = 5,
-            DoTTime = 4,
             DamageType = 'fire',
             DisplayName = 'Napalm Missile Launcher',
             FireTargetLayerCapsTable = {
@@ -371,13 +361,15 @@ UnitBlueprint {
             FiringRandomness = 0,
             Label = 'Missile_Pod',
             LeadTarget = true,
-            MaxRadius = 26,
+            MaxRadius = 22,
 			MinRadius = 10,
             MuzzleChargeDelay = 0,
-            MuzzleSalvoDelay = 0.1,
+            MuzzleSalvoDelay = 0.2,
             MuzzleSalvoSize = 5,
             MuzzleVelocity = 1,
-            NotExclusive = false,
+            NoPause = true,
+            NotExclusive = true,
+            PrefersPrimaryWeaponTarget = true,
             ProjectileId = '/projectiles/napalm_missile/napalm_missile_proj.bp',
             ProjectileLifetime = 10,
             ProjectilesPerOnFire = 5,
@@ -449,7 +441,7 @@ UnitBlueprint {
             TurretBonePitch = 'Missile_Launcher',
             TurretBoneYaw = 'Missile_Launcher',
             TurretDualManipulators = false,
-            TurretPitch = 0,
+            TurretPitch = 35,
             TurretPitchRange = 0,
             TurretPitchSpeed = 0,
             TurretYaw = 0,
