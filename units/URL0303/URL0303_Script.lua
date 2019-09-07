@@ -8,8 +8,10 @@
 local CWalkingLandUnit = import('/lua/cybranunits.lua').CWalkingLandUnit
 local Weapon = import('/lua/sim/Weapon.lua').Weapon
 local cWeapons = import('/lua/cybranweapons.lua')
+local BareBonesWeapon = import('/lua/sim/DefaultWeapons.lua').BareBonesWeapon
 local CDFLaserDisintegratorWeapon = cWeapons.CDFLaserDisintegratorWeapon01
 local CDFElectronBolterWeapon = cWeapons.CDFElectronBolterWeapon
+
 local MissileRedirect = import('/lua/defaultantiprojectile.lua').MissileRedirect
 
 local EMPDeathWeapon = Class(Weapon) {
@@ -32,6 +34,10 @@ URL0303 = Class(CWalkingLandUnit) {
         Disintigrator = Class(CDFLaserDisintegratorWeapon) {},
         HeavyBolter = Class(CDFElectronBolterWeapon) {},
         DeathWeapon = Class(EMPDeathWeapon) {},
+        MRedirect = Class(BareBonesWeapon) {
+            OnFire = function(self)--EQ:Disable the weapon completely pretty much. Not like it ever worked.
+            end,
+        },
     },
 
     OnStopBeingBuilt = function(self,builder,layer)
@@ -41,7 +47,8 @@ URL0303 = Class(CWalkingLandUnit) {
             Owner = self,
             Radius = bp.Radius,
             AttachBone = bp.AttachBone,
-            RedirectRateOfFire = bp.RedirectRateOfFire
+            RedirectRateOfFire = bp.RedirectRateOfFire,
+            Weapon = self:GetWeaponByLabel('MRedirect'),
         }
         self.Trash:Add(antiMissile)
     end,
