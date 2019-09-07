@@ -1,3 +1,9 @@
+-----------------------------------------------------------------------------
+--    File        :    /Titan_Missiles/hook/units/UEL0303/UEL0303_unit.bp
+--    Author(s)    :    Resin Smoker
+--    Summary     :    UEF Siege Assault Bot Script (With Napalm Launcher Enhancement)
+--    Copyright © 2015 Public release, All rights reserved.
+-----------------------------------------------------------------------------
 UnitBlueprint {
     Audio = {
         AmbientMove = Sound {
@@ -70,7 +76,7 @@ UnitBlueprint {
         RegenRate = 0,
         Shield = {
             ImpactEffects = 'UEFShieldHit01',
-            OwnerShieldMesh = '/units/uel0303/UEL0303_PersonalShield_mesh',
+            OwnerShieldMesh = '/units/UEL0303/UEL0303_PersonalShield_mesh',
             PersonalShield = true,
             RegenAssistMult = 60,
             ShieldEnergyDrainRechargeTime = 5,
@@ -84,39 +90,51 @@ UnitBlueprint {
         SubThreatLevel = 0,
         SurfaceThreatLevel = 9,
     },
-    Description = '<LOC uel0303_desc>Heavy Assault Bot',
+    Description = '<LOC UEL0303_desc>Heavy Assault Bot',
     Display = {
         Abilities = {
             '<LOC ability_personalshield>Personal Shield',
         },
         AnimationDeath = {
             {
-                Animation = '/units/uel0303/uel0303_adeath01.sca',
+                Animation = '/units/UEL0303/UEL0303_adeath01.sca',
                 AnimationRateMax = 1.25,
                 AnimationRateMin = 0.75,
                 Weight = 100,
             },
             {
-                Animation = '/units/uel0303/uel0303_adeath02.sca',
+                Animation = '/units/UEL0303/UEL0303_adeath02.sca',
+                AnimationRateMax = 1.25,
+                AnimationRateMin = 0.75,
+                Weight = 100,
+            },
+            {
+                Animation = '/units/UEL0303/UEL0303_Adeath03.sca',
                 AnimationRateMax = 1.25,
                 AnimationRateMin = 0.75,
                 Weight = 100,
             },
         },
-        AnimationWalk = '/units/uel0303/uel0303_awalk.sca',
-        AnimationWalkRate = 3.4,    #5
+        AnimationWalk = '/units/UEL0303/UEL0303_awalk.sca',
+        AnimationWalkRate = 4, --5
         Mesh = {
             IconFadeInZoom = 130,
             LODs = {
                 {
+                    MeshName = '/units/UEL0303/UEL0303_lod0.scm',
+                    AlbedoName = '/units/UEL0303/UEL0303_Albedo.dds',
+                    NormalsName = '/units/UEL0303/UEL0303_normalsTS.dds',
+                    SpecularName = '/units/UEL0303/UEL0303_SpecTeam.dds',
                     LODCutoff = 100,
                     ShaderName = 'Unit',
                 },
                 {
-                    AlbedoName = 'uel0303_lod1_albedo.dds',
+                    MeshName = '/units/UEL0303/UEL0303_lod0.scm',
+                    AlbedoName = '/units/UEL0303/UEL0303_lod1_albedo.dds',
+                    NormalsName = '/units/UEL0303/UEL0303_lod1_normalsTS.dds',
+                    SpecularName = '/units/UEL0303/UEL0303_lod1_specteam.dds',
                     LODCutoff = 215,
                     ShaderName = 'Unit',
-                    SpecularName = 'uel0303_lod1_specteam.dds',
                 },
             },
         },
@@ -141,7 +159,7 @@ UnitBlueprint {
                 Weight = 100,
             },
         },
-        UniformScale = 0.7,
+        UniformScale = 0.77,
     },
     Economy = {
         BuildCostEnergy = 5400,
@@ -182,14 +200,14 @@ UnitBlueprint {
         ToggleCaps = {
             RULEUTC_ShieldToggle = true,
         },
-        UnitName = '<LOC uel0303_name>Titan',
+        UnitName = '<LOC UEL0303_name>Titan',
         UnitWeight = 1,
     },
     Intel = {
         VisionRadius = 22,
     },
     Interface = {
-        HelpText = '<LOC uel0303_help>Heavy Assault Bot',
+        HelpText = '<LOC UEL0303_help>Heavy Assault Bot',
     },
     LifeBarHeight = 0.075,
     LifeBarOffset = 0.45,
@@ -224,10 +242,11 @@ UnitBlueprint {
     SelectionSizeX = 0.55,
     SelectionSizeZ = 0.5,
     SelectionThickness = 0.7,
-    SizeX = 0.9,
+    SizeX = 0.7,
     SizeY = 1.2,
-    SizeZ = 0.9,
+    SizeZ = 0.7,
     StrategicIconName = 'icon_bot3_directfire',
+    ModIconName = '4dc',
     StrategicIconSortPriority = 115,
     Transport = {
         CanFireFromTransport = false,
@@ -254,6 +273,7 @@ UnitBlueprint {
             BallisticArc = 'RULEUBA_LowArc',
             CollideFriendly = false,
             Damage = 50,
+            DamageRadius = 0,
             DamageType = 'Normal',
             DisplayName = 'Heavy Plasma Cannon',
             FireTargetLayerCapsTable = {
@@ -264,11 +284,12 @@ UnitBlueprint {
             FiringTolerance = 2,
             Label = 'HeavyPlasma01',
             LeadTarget = true,
-            MaxRadius = 22,
+            MaxRadius = 20,
             MuzzleSalvoDelay = 0,
             MuzzleSalvoSize = 1,
             MuzzleVelocity = 35,
             NoPause = true,
+            NotExclusive = true,
             ProjectileId = '/projectiles/TDFPlasmaHeavy04/TDFPlasmaHeavy04_proj.bp',
             ProjectileLifetimeUsesMultiplier = 1.15,
             ProjectilesPerOnFire = 1,
@@ -323,6 +344,127 @@ UnitBlueprint {
             WeaponCategory = 'Direct Fire',
             WeaponRepackTimeout = 0,
             WeaponUnpacks = false,
+        },
+        {
+            Audio = {
+                Fire = Sound {
+                    Bank = 'UELWeapon',
+                    Cue = 'UEB2304_Missile_Flayer',
+                    LodCutoff = 'Weapon_LodCutoff',
+                },
+            },
+            BallisticArc = 'RULEUBA_None',
+            CollideFriendly = false,
+            Damage = 10,
+            DamageFriendly = true,
+            DamageRadius = 3,
+            DoTPulses = 5,
+            DoTTime = 4,
+            DamageType = 'fire',
+            DisplayName = 'Napalm Missile Launcher',
+            FireTargetLayerCapsTable = {
+                Land = 'Land|Water|Seabed',
+                Seabed = 'Land|Water|Seabed',
+                Water = 'Land|Water|Seabed',
+            },
+            FiringTolerance = 5,
+            FiringRandomness = 0,
+            Label = 'Missile_Pod',
+            LeadTarget = true,
+            MaxRadius = 26,
+			MinRadius = 10,
+            MuzzleChargeDelay = 0,
+            MuzzleSalvoDelay = 0.1,
+            MuzzleSalvoSize = 5,
+            MuzzleVelocity = 1,
+            NotExclusive = false,
+            ProjectileId = '/projectiles/napalm_missile/napalm_missile_proj.bp',
+            ProjectileLifetime = 10,
+            ProjectilesPerOnFire = 5,
+            RackBones = {
+                {
+                    MuzzleBones = {
+                        'missile_01',
+                        'missile_02',
+                        'missile_03',
+                        'missile_04',
+                        'missile_05',
+                    },
+                    RackBone = 'missile_01',
+                },
+				{
+                    MuzzleBones = {
+                        'missile_06',
+                        'missile_07',
+                        'missile_08',
+                        'missile_09',
+                        'missile_10',
+                    },
+                    RackBone = 'missile_01',
+                },
+				{
+                    MuzzleBones = {
+                        'missile_11',
+                        'missile_12',
+                        'missile_13',
+                        'missile_14',
+                        'missile_15',
+                    },
+                    RackBone = 'missile_01',
+                },
+				
+				{
+                    MuzzleBones = {
+                        'missile_16',
+                        'missile_17',
+                        'missile_18',
+                        'missile_19',
+                        'missile_20',
+                    },
+                    RackBone = 'missile_01',
+                },
+            },
+            RackFireTogether = false,
+            RackRecoilDistance = 0,
+            RackReloadTimeout = 0,
+            RackSalvoChargeTime = 0,
+            RackSalvoReloadTime = 0,
+            RackSalvoSize = 1,
+            RackSlavedToTurret = false,
+            RangeCategory = 'UWRC_IndirectFire',
+            RateOfFire = 0.1,
+            RenderFireClock = true,
+            SlavedToBody = true,
+            TargetCheckInterval = 1,
+            TargetPriorities = {
+                'SPECIALHIGHPRI',
+                'TECH3 MOBILE',
+                'STRUCTURE DEFENSE DIRECTFIRE',
+                'TECH2 MOBILE',
+                'ALLUNITS',
+            },
+            TargetRestrictDisallow = 'UNTARGETABLE',
+            TrackingRadius = 1.15,
+            TurretBoneMuzzle = 'missile_01',
+            TurretBonePitch = 'Missile_Launcher',
+            TurretBoneYaw = 'Missile_Launcher',
+            TurretDualManipulators = false,
+            TurretPitch = 0,
+            TurretPitchRange = 0,
+            TurretPitchSpeed = 0,
+            TurretYaw = 0,
+            TurretYawRange = 0,
+            TurretYawSpeed = 0,
+            Turreted = true,
+            WeaponCategory = 'Missile',
+        },
+        {
+            Damage = 250,
+            DamageFriendly = false,
+            DamageRadius = 2,
+            DamageType = 'Normal',
+            DummyWeapon = true,
+            Label = 'DeathWeapon',
         },
     },
     Wreckage = {

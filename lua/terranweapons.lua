@@ -16,6 +16,7 @@ local DefaultBeamWeapon = WeaponFile.DefaultBeamWeapon
 local GinsuCollisionBeam = CollisionBeams.GinsuCollisionBeam
 local OrbitalDeathLaserCollisionBeam = CollisionBeams.OrbitalDeathLaserCollisionBeam
 local EffectTemplate = import('/lua/EffectTemplates.lua')
+local SingleCompositeEmitterProjectile = import('/lua/sim/defaultprojectiles.lua').SingleCompositeEmitterProjectile
 
 TDFFragmentationGrenadeLauncherWeapon= Class(DefaultProjectileWeapon) {
     FxMuzzleFlash = EffectTemplate.THeavyFragmentationGrenadeMuzzleFlash,
@@ -262,4 +263,29 @@ TOrbitalDeathLaserBeamWeapon = Class(DefaultBeamWeapon) {
         end
         DefaultBeamWeapon.PlayFxWeaponUnpackSequence(self)
     end,
+}
+
+NapalmMissileProjectile = Class(SingleCompositeEmitterProjectile) {
+	-- Emitter Values
+	FxInitial = {},
+	TrailDelay = 0,
+	FxTrails = {'/effects/emitters/missile_sam_munition_trail_01_emit.bp',},
+	FxTrailOffset = 0,
+	PolyTrail = '/effects/emitters/default_polytrail_01_emit.bp',
+	BeamName = '/effects/emitters/rocket_iridium_exhaust_beam_01_emit.bp',
+	-- Hit Effects
+	FxImpactUnit = {
+		'/effects/emitters/napalm_fire_emit_2.bp',
+		'/effects/emitters/napalm_01_emit.bp',
+	},
+	FxImpactProp = {
+		'/effects/emitters/napalm_fire_emit_2.bp',
+		'/effects/emitters/napalm_01_emit.bp',
+	},
+	FxImpactLand = {
+		'/effects/emitters/napalm_fire_emit_2.bp',
+		'/effects/emitters/napalm_01_emit.bp',
+	},
+	FxImpactWater = EffectTemplate.TNapalmHvyCarpetBombHitWater01,
+	FxImpactUnderWater = {},
 }
